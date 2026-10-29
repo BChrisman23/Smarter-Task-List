@@ -15,7 +15,7 @@ Keeping track of assignments that need completed as well as their due dates and 
 - Prints task information when prompted by the user
 - Writes task list to objects.txt
 
-![Flowchart](docs/CS193 - Final Project - Flowchart.drawio.png)
+![Flowchart](docs/Flowchart.drawio.png)
 
 ## Tech Stack
 - **Language:** Java
