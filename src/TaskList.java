@@ -69,8 +69,19 @@ public class TaskList {
     public boolean addTask(Task task) {
         for (int i = 0; i < tasks.size(); i++) {
             int compared = task.getDate().compareTo(tasks.get(i).getDate());
-            if (compared == 0) {
+            if (compared == 0 && task.getTitle().equals(tasks.get(i).getTitle())) {
                 return false;
+            } else if (compared == 0) {
+                int titleCompared = task.getTitle().compareTo(tasks.get(i).getTitle());
+                if (titleCompared == 0) {
+                    return false;
+                } else if (titleCompared < 0) {
+                    tasks.add(i, task);
+                    return true;
+                } else {
+                    tasks.add(i + 1, task);
+                    return true;
+                }
             } else if (compared < 0) {
                 tasks.add(i, task);
                 return true;
@@ -78,5 +89,36 @@ public class TaskList {
         }
         tasks.add(task);
         return true;
+    }
+
+    /**
+     * Removes the task with the given title
+     *
+     * @param String title, the title to look for
+     * @return boolean, true if successful, false if not found
+     */
+    public boolean removeTask (String title) {
+        for (int i = 0; i < tasks.size(); i++) {
+            if (title.equals(tasks.get(i).getTitle())) {
+                tasks.remove(i);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Finds the task with the specified title
+     *
+     * @param String title, the title to look for
+     * @return Task, the task with the specified title
+     */
+    public Task getTask(String title) {
+        for (int i = 0; i < tasks.size(); i++) {
+            if (title.equals(tasks.get(i).getTitle())) {
+                return tasks.get(i);
+            }
+        }
+        return null;
     }
 }
