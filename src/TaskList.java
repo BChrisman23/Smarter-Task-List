@@ -1,5 +1,3 @@
-import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -60,5 +58,25 @@ public class TaskList {
         } catch (IOException e) {
             IO.println(e.getStackTrace());
         }
+    }
+
+    /**
+     * Adds a Task to tasks in the correct sorting order
+     *
+     * @param Task task, the task to add
+     * @return true if successful, false if the task already exists
+     */
+    public boolean addTask(Task task) {
+        for (int i = 0; i < tasks.size(); i++) {
+            int compared = task.getDate().compareTo(tasks.get(i).getDate());
+            if (compared == 0) {
+                return false;
+            } else if (compared < 0) {
+                tasks.add(i, task);
+                return true;
+            }
+        }
+        tasks.add(task);
+        return true;
     }
 }
