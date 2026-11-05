@@ -1,3 +1,5 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -120,5 +122,83 @@ public class TaskList {
             }
         }
         return null;
+    }
+
+    /**
+     * Runs the TaskList to receive and respond to user input until the user quits
+     */
+    public void run() {
+        String input = "";
+        IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
+        IO.println("To see a task's details enter 2,Title");
+        IO.println("To remove a task enter 3,Title");
+        IO.println("To see the task list enter 4");
+        IO.println("Enter quit to exit the program and save the list");
+        IO.println("Enter help to see the list of commands");
+        while (true) {
+            input = IO.readln("Enter a command: ");
+            String[] command;
+            if (input.equals("help")) {
+                command = new String[] {"help"};
+            } else if (input.equals("quit")) {
+                command = new String[] {"quit"};
+            } else {
+                command = input.split(",");
+            }
+            switch (command[0]) {
+                case "1" -> {
+                    LocalDate date = LocalDate.now();
+                    try {
+                        date =  LocalDate.parse(command[2]);
+                    } catch (DateTimeParseException e) {
+                        IO.println("Invalid Date: enter in the form YYYY-MM-DD");
+                    }
+                    Task newTask = new Task(command[1], date);
+                    boolean result = addTask(newTask);
+                    if (result) {
+                        IO.println("Task added successfully");
+                    } else {
+                        IO.println("Task could not be added");
+                    }
+                }
+                case "2" -> {
+                    Task viewing = getTask(command[1]);
+                    if (viewing != null) {
+                        IO.println(viewing);
+                    } else {
+                        IO.println("Task could not be viewed");
+                    }
+                }
+                case "3" -> {
+                    boolean result = removeTask(command[1]);
+                    if (result) {
+                        IO.println("Task removed successfully");
+                    } else {
+                        IO.println("Task could not be removed");
+                    }
+                }
+                case "4" -> {
+                    for (Task task : tasks) {
+                        IO.println(task);
+                    }
+                }
+                case "help" -> {
+                    IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
+                    IO.println("To see a task's details enter 2,Title");
+                    IO.println("To remove a task enter 3,Title");
+                    IO.println("To see the task list enter 4");
+                    IO.println("To see this list of commands enter help");
+                }
+                case "quit" -> {
+                    shutdown();
+                    IO.println("Goodbye");
+                    break;
+                }
+                default -> {
+                    IO.println("Command not recognized");
+                    IO.println("Enter help to see a list of command");
+                }
+            }
+        }
     }
 }
