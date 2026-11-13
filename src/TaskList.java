@@ -16,7 +16,7 @@ import java.io.EOFException;
  * Manages a list of tasks for the user
  *
  * @author Brennan Chrisman
- * @version Nov. 5, 2026
+ * @version Nov. 13, 2026
  */
 
 public class TaskList {
@@ -130,9 +130,10 @@ public class TaskList {
     public void run() {
         String input = "";
         IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
-        IO.println("To see a task's details enter 2,Title");
+        IO.println("To see a task's notes enter 2,Title");
         IO.println("To remove a task enter 3,Title");
         IO.println("To see the task list enter 4");
+        IO.println("To add a note to a task enter 5,Title,note");
         IO.println("Enter quit to exit the program and save the list");
         IO.println("Enter help to see the list of commands");
         boolean running = true;
@@ -166,6 +167,7 @@ public class TaskList {
                     Task viewing = getTask(command[1]);
                     if (viewing != null) {
                         IO.println(viewing);
+                        IO.println(viewing.getnotes());
                     } else {
                         IO.println("Task could not be viewed");
                     }
@@ -188,11 +190,19 @@ public class TaskList {
                     }
 
                 }
+                case "5" -> {
+                    Task viewing = getTask(command[1]);
+                    viewing.addnote(command[2]);
+                    IO.println("note added successfully");
+                    IO.println(viewing);
+                    IO.println(viewing.getnotes());
+                }
                 case "help" -> {
                     IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
-                    IO.println("To see a task's details enter 2,Title");
+                    IO.println("To see a task's notes enter 2,Title");
                     IO.println("To remove a task enter 3,Title");
                     IO.println("To see the task list enter 4");
+                    IO.println("To add a note to a task enter 5,Title,note");
                     IO.println("To see this list of commands enter help");
                 }
                 case "quit" -> {

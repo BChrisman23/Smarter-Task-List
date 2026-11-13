@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Task Class
@@ -13,6 +14,7 @@ import java.io.Serializable;
 public class Task implements Serializable{
     private String title;
     private LocalDate date;
+    private ArrayList<String> notes;
 
     /**
      * Constructs a new Task object with the specified title and date
@@ -22,6 +24,7 @@ public class Task implements Serializable{
     public Task(String title, LocalDate date) {
         this.title = title;
         this.date = date;
+        notes = new ArrayList<>();
     }
 
     /**
@@ -59,8 +62,29 @@ public class Task implements Serializable{
         this.date = date;
     }
 
+    /**
+     * Adds a note to this task
+     * @param String note, the note to add to this task
+     */
+    public void addnote(String note) {
+        notes.add(note);
+    }
+
+    /**
+     * Lists the notes for this task
+     *
+     * @return String, each note on its own line
+     */
+    public String getnotes() {
+        String info = "";
+        for (String note : notes) {
+            info += "- " + note + "\n";
+        }
+        return info;
+    }
+
     @Override
     public String toString() {
-        return "Task {" + title + ", " + date + "}";
+        return  title + ", " + date;
     }
 }
