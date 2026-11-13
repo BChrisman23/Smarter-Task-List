@@ -61,6 +61,6 @@ public class Task implements Serializable{
 
     @Override
     public String toString() {
-        return "Task{" + "title=" + title + ", date=" + date + '}';
+        return "Task {" + title + ", " + date + "}";
     }
 }

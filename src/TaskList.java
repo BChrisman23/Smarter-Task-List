@@ -135,7 +135,8 @@ public class TaskList {
         IO.println("To see the task list enter 4");
         IO.println("Enter quit to exit the program and save the list");
         IO.println("Enter help to see the list of commands");
-        while (true) {
+        boolean running = true;
+        while (running) {
             input = IO.readln("Enter a command: ");
             String[] command;
             if (input.equals("help")) {
@@ -178,9 +179,14 @@ public class TaskList {
                     }
                 }
                 case "4" -> {
-                    for (Task task : tasks) {
-                        IO.println(task);
+                    if (tasks.isEmpty()) {
+                        IO.println("Task list is empty");
+                    } else {
+                        for (Task task : tasks) {
+                            IO.println(task);
+                        }
                     }
+
                 }
                 case "help" -> {
                     IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
@@ -192,7 +198,7 @@ public class TaskList {
                 case "quit" -> {
                     shutdown();
                     IO.println("Goodbye");
-                    break;
+                    running = false;
                 }
                 default -> {
                     IO.println("Command not recognized");
@@ -200,5 +206,11 @@ public class TaskList {
                 }
             }
         }
+    }
+
+
+    public static void main(String[] args) {
+        TaskList taskList = new TaskList();
+        taskList.run();
     }
 }
