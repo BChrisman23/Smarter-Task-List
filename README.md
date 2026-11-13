@@ -32,7 +32,7 @@ Keeping track of assignments that need completed as well as their due dates and 
 
 - [ ] Allow User entered sorting criteria
 - [ ] Basic GUI
-- [ ] Allow tasks to hold more data
+- [X] Allow tasks to hold more data
 - [ ] Add recurring tasks
 
 ## Author
