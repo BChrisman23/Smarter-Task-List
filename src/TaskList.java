@@ -149,35 +149,50 @@ public class TaskList {
             }
             switch (command[0]) {
                 case "1" -> {
-                    LocalDate date = LocalDate.now();
-                    try {
-                        date =  LocalDate.parse(command[2]);
-                    } catch (DateTimeParseException e) {
-                        IO.println("Invalid Date: enter in the form YYYY-MM-DD");
-                    }
-                    Task newTask = new Task(command[1], date);
-                    boolean result = addTask(newTask);
-                    if (result) {
-                        IO.println("Task added successfully");
+                    if (command.length != 3) {
+                        IO.println("Incorrect number of arguments");
+                        IO.println("Expected: 1,Title,YYYY-MM-DD");
                     } else {
-                        IO.println("Task could not be added");
+                        LocalDate date = LocalDate.now();
+                        try {
+                            date =  LocalDate.parse(command[2]);
+                        } catch (DateTimeParseException e) {
+                            IO.println("Invalid Date: enter in the form YYYY-MM-DD");
+                        }
+                        Task newTask = new Task(command[1], date);
+                        boolean result = addTask(newTask);
+                        if (result) {
+                            IO.println("Task added successfully");
+                        } else {
+                            IO.println("Task could not be added");
+                        }
                     }
                 }
                 case "2" -> {
-                    Task viewing = getTask(command[1]);
-                    if (viewing != null) {
-                        IO.println(viewing);
-                        IO.println(viewing.getnotes());
+                    if (command.length != 2) {
+                        IO.println("Incorrect number of arguments");
+                        IO.println("Expected: 2,Title");
                     } else {
-                        IO.println("Task could not be viewed");
+                        Task viewing = getTask(command[1]);
+                        if (viewing != null) {
+                            IO.println(viewing);
+                            IO.println(viewing.getnotes());
+                        } else {
+                            IO.println("Task could not be viewed");
+                        }
                     }
                 }
                 case "3" -> {
-                    boolean result = removeTask(command[1]);
-                    if (result) {
-                        IO.println("Task removed successfully");
+                    if (command.length != 2) {
+                        IO.println("Incorrect number of arguments");
+                        IO.println("Expected: 2,Title");
                     } else {
-                        IO.println("Task could not be removed");
+                        boolean result = removeTask(command[1]);
+                        if (result) {
+                            IO.println("Task removed successfully");
+                        } else {
+                            IO.println("Task could not be removed");
+                        }
                     }
                 }
                 case "4" -> {
@@ -191,11 +206,16 @@ public class TaskList {
 
                 }
                 case "5" -> {
-                    Task viewing = getTask(command[1]);
-                    viewing.addnote(command[2]);
-                    IO.println("note added successfully");
-                    IO.println(viewing);
-                    IO.println(viewing.getnotes());
+                    if (command.length != 3) {
+                        IO.println("Incorrect number of arguments");
+                        IO.println("Expected: 5,Title,Note");
+                    } else {
+                        Task viewing = getTask(command[1]);
+                        viewing.addnote(command[2]);
+                        IO.println("note added successfully");
+                        IO.println(viewing);
+                        IO.println(viewing.getnotes());
+                    }
                 }
                 case "help" -> {
                     IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
