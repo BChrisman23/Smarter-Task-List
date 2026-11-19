@@ -33,7 +33,7 @@ Keeping track of assignments that need completed as well as their due dates and 
 - [ ] Allow User entered sorting criteria
 - [ ] Basic GUI
 - [X] Allow tasks to hold more data
-- [ ] Add recurring tasks
+- [X] Add recurring tasks
 
 ## Author
 Brennan Chrisman, github.com/BChrisman23
