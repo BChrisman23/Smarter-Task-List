@@ -52,6 +52,7 @@ public class TaskList {
         } catch (IOException e) {
             IO.println(e.getStackTrace());
         }
+        //Update the list with any recurring tasks that need to be added
         update();
     }
 
