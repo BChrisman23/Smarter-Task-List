@@ -1,5 +1,6 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -21,9 +22,11 @@ import java.io.EOFException;
 
 public class TaskList {
     private ArrayList<Task> tasks;
+    private ArrayList<Task> recurringTasks;
 
     public TaskList() {
         tasks = new ArrayList<Task>();
+        recurringTasks = new ArrayList<Task>();
         startup();
     }
 
@@ -34,7 +37,11 @@ public class TaskList {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("List.txt"))) {
             while (true) {
                 Task task = (Task) ois.readObject();
-                tasks.add(task);
+                if (task.isRecurring()) {
+                    recurringTasks.add(task);
+                } else {
+                    addTask(task);
+                }
             }
         } catch (EOFException e) {
 
@@ -45,12 +52,26 @@ public class TaskList {
         } catch (IOException e) {
             IO.println(e.getStackTrace());
         }
+        //Update the list with any recurring tasks that need to be added
+        update();
     }
 
     /**
      * Shutsdown the task list and writes the list of tasks to the file List.txt
      */
     public void shutdown() {
+        //Ensure all recurring tasks are the task list to be saved in List.txt
+        for (Task recur : recurringTasks) {
+            boolean isAdded = false;
+            for (Task task : tasks) {
+                if (recur.equals(task)) {
+                    isAdded = true;
+                }
+            }
+            if (!isAdded) {
+                addTask(recur);
+            }
+        }
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("List.txt"))) {
             for (Task task : tasks) {
                 oos.writeObject(task);
@@ -102,6 +123,15 @@ public class TaskList {
     public boolean removeTask (String title) {
         for (int i = 0; i < tasks.size(); i++) {
             if (title.equals(tasks.get(i).getTitle())) {
+                //If the task is recurring, increment its date by 7 days
+                if (tasks.get(i).isRecurring()) {
+                    for (int j = 0; j < recurringTasks.size(); j++) {
+                        if (recurringTasks.get(j).getTitle().equals(title)) {
+                            LocalDate nextDate = recurringTasks.get(j).getDate().plusDays(7);
+                            recurringTasks.get(j).setDate(nextDate);
+                        }
+                    }
+                }
                 tasks.remove(i);
                 return true;
             }
@@ -129,11 +159,12 @@ public class TaskList {
      */
     public void run() {
         String input = "";
-        IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
+        IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD,<Optional true for weekly recurrence>");
         IO.println("To see a task's notes enter 2,Title");
         IO.println("To remove a task enter 3,Title");
         IO.println("To see the task list enter 4");
         IO.println("To add a note to a task enter 5,Title,note");
+        IO.println("To update the list with recurring tasks enter 6");
         IO.println("Enter quit to exit the program and save the list");
         IO.println("Enter help to see the list of commands");
         boolean running = true;
@@ -149,9 +180,9 @@ public class TaskList {
             }
             switch (command[0]) {
                 case "1" -> {
-                    if (command.length != 3) {
+                    if (command.length != 3 && command.length != 4) {
                         IO.println("Incorrect number of arguments");
-                        IO.println("Expected: 1,Title,YYYY-MM-DD");
+                        IO.println("Expected: 1,Title,YYYY-MM-DD,<Optional true for weekly recurrence>");
                     } else {
                         LocalDate date = LocalDate.now();
                         try {
@@ -159,7 +190,13 @@ public class TaskList {
                         } catch (DateTimeParseException e) {
                             IO.println("Invalid Date: enter in the form YYYY-MM-DD");
                         }
-                        Task newTask = new Task(command[1], date);
+                        Task newTask;
+                        if (command.length == 4) {
+                            newTask = new Task(command[1], date, true);
+                            recurringTasks.add(newTask);
+                        } else {
+                            newTask = new Task(command[1], date);
+                        }
                         boolean result = addTask(newTask);
                         if (result) {
                             IO.println("Task added successfully");
@@ -217,12 +254,17 @@ public class TaskList {
                         IO.println(viewing.getnotes());
                     }
                 }
+                case "6" -> {
+                    update();
+                    IO.println("Task list updated successfully");
+                }
                 case "help" -> {
-                    IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD");
+                    IO.println("To add a Task to the list enter 1,Title,YYYY-MM-DD,<Optional true for weekly recurrence>");
                     IO.println("To see a task's notes enter 2,Title");
                     IO.println("To remove a task enter 3,Title");
                     IO.println("To see the task list enter 4");
                     IO.println("To add a note to a task enter 5,Title,note");
+                    IO.println("To update the list with recurring tasks enter 6");
                     IO.println("To see this list of commands enter help");
                 }
                 case "quit" -> {
@@ -234,6 +276,18 @@ public class TaskList {
                     IO.println("Command not recognized");
                     IO.println("Enter help to see a list of command");
                 }
+            }
+        }
+    }
+
+    /**
+     * Checks and adds any recurring tasks that are due to be added to the main task list
+     */
+    public void update() {
+        for (Task recur : recurringTasks) {
+            int daysUntil = (int) LocalDate.now().until(recur.getDate(), ChronoUnit.DAYS);
+            if (daysUntil <= 4) {
+                addTask(recur);
             }
         }
     }
