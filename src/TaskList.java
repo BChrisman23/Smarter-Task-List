@@ -248,10 +248,15 @@ public class TaskList {
                         IO.println("Expected: 5,Title,Note");
                     } else {
                         Task viewing = getTask(command[1]);
-                        viewing.addnote(command[2]);
-                        IO.println("note added successfully");
-                        IO.println(viewing);
-                        IO.println(viewing.getnotes());
+                        if (viewing != null) {
+                            viewing.addnote(command[2]);
+                            IO.println("note added successfully");
+                            IO.println(viewing);
+                            IO.println(viewing.getnotes());
+                        } else {
+                            IO.println("Task could not be found, ensure title exists.");
+                        }
+
                     }
                 }
                 case "6" -> {
