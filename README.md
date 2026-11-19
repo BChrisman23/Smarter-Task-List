@@ -24,14 +24,19 @@ Keeping track of assignments that need completed as well as their due dates and 
 
 ## Setup
 First clone the repo using: git clone  https://github.com/BChrisman23/Smarter-Task-List.git
+
 Then move into the directory using "cd Smarter-Task-List/src"
+
 Next, ensure that Java is Intalled: run "java -version" in the terminal
 If the output is not something like: "openjdk version "25.0.5.1" 2026-11-17"
 Then for Linux/Mac run:  "sudo apt install openjdk-25-jre-headless"
   for Windows run: "winget install EclipseAdoptium.Temurin.25.JDK"
 Run: "java -version" to ensure that it was downloaded properly.
+
 Finally run: "java Main.java" to begin the program
+
 You should see:
+
     To add a Task to the list enter 1,Title,YYYY-MM-DD,<Optional true for weekly recurrence>
     To see a task's notes enter 2,Title
     To remove a task enter 3,Title
