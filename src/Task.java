@@ -15,6 +15,7 @@ public class Task implements Serializable{
     private String title;
     private LocalDate date;
     private ArrayList<String> notes;
+    private boolean recurring;
 
     /**
      * Constructs a new Task object with the specified title and date
@@ -25,6 +26,20 @@ public class Task implements Serializable{
         this.title = title;
         this.date = date;
         notes = new ArrayList<>();
+        recurring = false;
+    }
+
+    /**
+     * Constructs a new Task object with the specified title and date
+     * @param String title, the title of the task
+     * @param LocalDate date, the due date of the task
+     * @param boolean recurring, whether this task is recurring
+     */
+    public Task(String title, LocalDate date, boolean recurring) {
+        this.title = title;
+        this.date = date;
+        notes = new ArrayList<>();
+        this.recurring = recurring;
     }
 
     /**
@@ -63,6 +78,24 @@ public class Task implements Serializable{
     }
 
     /**
+     * Get whether this task is recurring
+     *
+     * @return boolean, true if this task is recurring, false if not
+     */
+    public boolean isRecurring() {
+        return recurring;
+    }
+
+    /**
+     * Set whether this task is recurring
+     *
+     * @param boolean recurring, the status to set this task to
+     */
+    public void setRecurring(boolean recurring) {
+        this.recurring = recurring;
+    }
+
+    /**
      * Adds a note to this task
      * @param String note, the note to add to this task
      */
@@ -86,5 +119,23 @@ public class Task implements Serializable{
     @Override
     public String toString() {
         return  title + ", " + date;
+    }
+
+    /**
+     * Equals method comparing by title
+     * @param Object o, the object to compare with
+     * @return boolean, true if titles are equal, false otherwise
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Task t) {
+            if(t.getTitle().equals(title)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 }
